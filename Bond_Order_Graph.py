@@ -25,6 +25,8 @@ class Phikeia:
         :param score: new score to add
         :return: nothing
         """
+        score = score.replace('"', "")
+        score = score.replace("'", "")
         self._scores.append(score)
 
     def calculate_average(self, total_num):
@@ -63,11 +65,17 @@ if __name__ == "__main__":
 
     first_line = data.readline().split(',')
 
+    offset = 0
+
     phikeias = []
     for name in first_line:
         name = name.replace("\n", "")
         if not name.__contains__('Timestamp') and not name.__contains__('Name'):
             phikeias.append(Phikeia(name))
+        if name.__contains__('Timestamp'):
+            offset += 1
+        if name.__contains__('Name'):
+            offset += 1
 
     brother_total = 0
     # go through the rest of the lines and add the scores to the corresponding phikeia
@@ -75,8 +83,8 @@ if __name__ == "__main__":
         line = line.replace("\n", "")
         line_split = line.split(',')
 
-        for x in range(2, len(line_split)):
-            phikeias[x - 2].add_score(line_split[x])
+        for x in range(offset, len(line_split)):
+            phikeias[x - offset].add_score(line_split[x])
 
         brother_total += 1
 
